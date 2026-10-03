@@ -1,0 +1,26 @@
+{
+  "name": "ai-builder",
+  "version": "1.0.0",
+  "description": "Local-first AI CLI to analyze and complete projects securely across platforms",
+  "type": "module",
+  "bin": {
+    "ai-builder": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/cli/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/cli/index.js"
+  },
+  "dependencies": {
+    "chalk": "^5.1.2",
+    "fs-extra": "^11.1.0",
+    "inquirer": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.0",
+    "@types/inquirer": "^9.0.0",
+    "@types/node": "^20.11.30",
+    "tsx": "^4.15.0",
+    "typescript": "^5.4.5"
+  }
+}
