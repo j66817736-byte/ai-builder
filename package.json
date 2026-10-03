@@ -9,7 +9,38 @@
   "scripts": {
     "dev": "tsx src/cli/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/cli/index.js"
+    "start": "node dist/cli/index.js",
+    "prepare": "npm run build",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "lint": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "keywords": [
+    "ai",
+    "builder",
+    "cli",
+    "project-analysis",
+    "security",
+    "privacy",
+    "multiplataform",
+    "typescript",
+    "documentation"
+  ],
+  "author": "j66817736-byte",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/j66817736-byte/ai-builder"
+  },
+  "bugs": {
+    "url": "https://github.com/j66817736-byte/ai-builder/issues"
+  },
+  "homepage": "https://github.com/j66817736-byte/ai-builder#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "dependencies": {
     "chalk": "^5.1.2",
@@ -21,6 +52,10 @@
     "@types/inquirer": "^9.0.0",
     "@types/node": "^20.11.30",
     "tsx": "^4.15.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "prettier": "^3.0.0"
   }
 }
