@@ -1,45 +1,41 @@
 # AI Builder
 
-AI Builder es una herramienta local-first para ayudar a analizar, completar y mejorar proyectos reales sin romper la privacidad.
+## Modo Administrador Privado
 
-## Objetivo
+AI Builder incluye un panel administrativo local con acceso separado y privado.
 
-- Analizar proyectos existentes sin asumir una estructura rígida
-- Detectar framework, lenguaje y estructura
-- Identificar qué falta
-- Proponer mejoras útiles
-- Validar la base del proyecto
-- Mantener la privacidad por defecto
-
-## Uso
+### Comandos de administrador
 
 ```bash
-npm install
-npm run dev -- analyze ./mi-proyecto
+ai-builder admin --status
+ai-builder admin --panel
+ai-builder admin --enable <secret> <device-name>
+ai-builder admin --validate <secret>
+ai-builder admin --sync <device-name>
 ```
 
-o instalar globalmente:
+### Reglas de seguridad
 
-```bash
-npm install -g .
-ai-builder analyze ./mi-proyecto
-```
+- El administrador no aparece en la interfaz de usuarios normales.
+- Los secretos se manejan localmente.
+- La configuración privada se guarda en `~/.ai-builder`.
+- Los dispositivos registrados se mantienen en el almacenamiento local del equipo.
+- El modo privado está habilitado por defecto.
 
-## Comandos
+### Recomendaciones
 
-- `ai-builder analyze ./ruta`
-- `ai-builder validate`
-- `ai-builder complete auth`
-- `ai-builder docs`
+- Usa contraseñas largas y únicas.
+- Mantén el panel privado en un dispositivo personal.
+- No lo compartas ni lo publiques en repositorios.
+- Usa `.gitignore` para proteger archivos de entorno.
 
-## Seguridad
+## Multi-dispositivo
 
-- Este CLI funciona localmente por defecto
-- No sube tus proyectos a servidores sin permiso
-- Los datos sensibles deben evitarse en logs y salidas
+La administración privada puede sincronizarse con dispositivos confiables de forma local, sin exponer datos en la nube.
 
-## Stack
+## Compatibilidad
 
-- TypeScript
-- Node.js
-- CLI multiplataforma
+- Windows
+- macOS
+- Linux
+- Dispositivos móviles compatibles con el entorno local

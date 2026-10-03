@@ -16,6 +16,7 @@ import { getPrivacyWarning, getSecurityAdvice } from "../lib/security/privacy.js
 import { printHeader, printSuccess, printWarning, printError, printInfo, printTip } from "../lib/utils/formatters.js";
 import { getPerformanceMetrics, getHealthStatus } from "../lib/core/projectHealth.js";
 import { runTypeChecks, validateProjectStructure, validateFrameworkSetup } from "../lib/validators/structureValidator.js";
+import { adminStatusCommand, adminEnableCommand, adminValidateCommand, adminSyncCommand, adminPanelCommand } from "../lib/admin/adminCommands.js";
 import fs from "fs-extra";
 import path from "path";
 
@@ -28,18 +29,15 @@ async function analyzeCommand(targetPath: string) {
   const { score, details } = getPerformanceMetrics(projectInfo);
   const health = getHealthStatus(score);
 
-  // Resumen del proyecto
   console.log(chalk.green.bold("📊 Resumen del Proyecto:"));
   console.log(`  🔧 Framework: ${projectInfo.framework || "No detectado"}`);
   console.log(`  💻 Lenguaje: ${projectInfo.language || "No detectado"}`);
   console.log(`  📦 Stack: ${projectInfo.type}`);
   console.log(`  💪 Salud: ${health.emoji} ${health.status} (${score}/100)\n`);
 
-  // Características detectadas
   console.log(chalk.green.bold("✨ Características Detectadas:"));
   details.forEach((detail) => console.log(`  ${detail}`));
 
-  // Qué falta
   console.log("\n" + chalk.yellow.bold("⚠️ Qué Puede Mejorarse:"));
   if (features.missing.length === 0) {
     printSuccess("Ninguna funcionalidad crítica falta.");
@@ -47,11 +45,9 @@ async function analyzeCommand(targetPath: string) {
     features.missing.forEach((feature) => console.log(`  • ${feature}`));
   }
 
-  // Recomendaciones
   console.log("\n" + chalk.magenta.bold("💡 Recomendaciones:"));
   features.recommendations.forEach((rec) => console.log(`  → ${rec}`));
 
-  // Plan de acción
   console.log("\n" + chalk.blue.bold("📋 Plan de Acción:"));
   features.plan.forEach((step) => console.log(`  ${step}`));
 
@@ -66,7 +62,6 @@ async function validateCommand(targetPath: string) {
   const projectInfo = await analyzeProject(targetPath);
   const validation = await performSecurityValidation(targetPath, projectInfo);
   const typeChecks = runTypeChecks(projectInfo);
-  const structureChecks = validateProjectStructure(projectInfo);
   const frameworkChecks = validateFrameworkSetup(projectInfo);
 
   console.log(chalk.green.bold("Estado del Proyecto:"));
@@ -99,10 +94,8 @@ async function validateCommand(targetPath: string) {
   console.log("\n" + (allOk ? chalk.green.bold("✅ Validación exitosa") : chalk.red.bold("❌ Hay problemas que revisar")));
 }
 
-async function completeCommand(feature: string, targetPath: string) {
-  console.log(chalk.cyan(getPrivacyWarning()));
+async function completeCommand(feature: string) {
   printHeader(`📝 Generando Plantilla: ${feature.toUpperCase()}`);
-
   try {
     const template = await generateFeature(feature as any);
     const description = getFeatureDescription(feature as any);
@@ -130,11 +123,9 @@ async function docsCommand(targetPath: string) {
     const todo = await generateTodoList(projectInfo);
     const changelog = await generateChangeLog();
 
-    // Crear carpeta docs si no existe
     const docsDir = path.join(targetPath, "docs");
     await fs.ensureDir(docsDir);
 
-    // Guardar archivos
     await fs.writeFile(path.join(targetPath, "README.md"), readme);
     await fs.writeFile(path.join(docsDir, "ARCHITECTURE.md"), architecture);
     await fs.writeFile(path.join(docsDir, "SECURITY_CHECKLIST.md"), security);
@@ -154,6 +145,31 @@ async function docsCommand(targetPath: string) {
   }
 }
 
+async function adminCommand(args: string[]) {
+  const subcommand = args[0] ?? "--status";
+
+  switch (subcommand) {
+    case "--status":
+      await adminStatusCommand();
+      break;
+    case "--panel":
+      await adminPanelCommand();
+      break;
+    case "--enable":
+      await adminEnableCommand(args[1] ?? "admin-secret", args[2] ?? "mi-dispositivo");
+      break;
+    case "--validate":
+      await adminValidateCommand(args[1] ?? "admin-secret");
+      break;
+    case "--sync":
+      await adminSyncCommand(args[1] ?? "mi-dispositivo");
+      break;
+    default:
+      printError("Subcomando admin no reconocido.");
+      console.log(chalk.gray("Usa: ai-builder admin --status | --panel | --enable <secret> <device> | --validate <secret> | --sync <device>"));
+  }
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const command = args[0];
@@ -166,14 +182,14 @@ async function main() {
     console.log(chalk.green("  ai-builder validate ./mi-proyecto"));
     console.log(chalk.green("  ai-builder complete auth"));
     console.log(chalk.green("  ai-builder docs ./mi-proyecto"));
-    console.log(chalk.gray("\nComandos:"));
-    console.log(chalk.gray("  analyze  - Analiza tu proyecto y sugiere mejoras"));
-    console.log(chalk.gray("  validate - Valida seguridad y estructura"));
-    console.log(chalk.gray("  complete - Genera plantillas de funcionalidades"));
-    console.log(chalk.gray("  docs     - Crea documentación automática"));
-    console.log(chalk.gray("\nFuncionalidades disponibles:"));
-    console.log(chalk.gray("  auth dashboard api crud tests docs deploy"));
+    console.log(chalk.green("  ai-builder admin --status"));
+    console.log(chalk.green("  ai-builder admin --panel"));
     console.log();
+    return;
+  }
+
+  if (command === "admin") {
+    await adminCommand(args.slice(1));
     return;
   }
 
@@ -187,7 +203,7 @@ async function main() {
       await validateCommand(targetPath);
       break;
     case "complete":
-      await completeCommand(args[1] ?? "auth", targetPath);
+      await completeCommand(args[1] ?? "auth");
       break;
     case "docs":
       await docsCommand(targetPath);
