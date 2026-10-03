@@ -1,21 +1,27 @@
 {
   "name": "ai-builder",
   "version": "1.0.0",
-  "description": "Local-first AI CLI to analyze and complete projects securely across platforms",
+  "description": "Local-first AI CLI para analizar y completar proyectos de forma segura, con panel administrativo privado",
   "type": "module",
   "bin": {
-    "ai-builder": "./dist/cli/index.js"
+    "ai-builder": "./bin/ai-builder.js"
+  },
+  "main": "./dist/cli/index.js",
+  "exports": {
+    ".": "./dist/cli/index.js"
   },
   "scripts": {
     "dev": "tsx src/cli/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/cli/index.js",
-    "prepare": "npm run build",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "lint": "tsc --noEmit",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepublishOnly": "npm run build && npm run lint",
+    "prepare": "npm run build",
+    "postinstall": "npm run build"
   },
   "keywords": [
     "ai",
@@ -26,13 +32,17 @@
     "privacy",
     "multiplataform",
     "typescript",
-    "documentation"
+    "documentation",
+    "admin-panel",
+    "local-first",
+    "developer-tools"
   ],
   "author": "j66817736-byte",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/j66817736-byte/ai-builder"
+    "url": "https://github.com/j66817736-byte/ai-builder",
+    "directory": "./"
   },
   "bugs": {
     "url": "https://github.com/j66817736-byte/ai-builder/issues"
@@ -56,6 +66,9 @@
     "vitest": "^1.0.0",
     "@vitest/ui": "^1.0.0",
     "@vitest/coverage-v8": "^1.0.0",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0"
   }
 }
