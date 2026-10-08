@@ -11,13 +11,14 @@ echo ""
 
 # Opción 1: Analizar proyecto
 if [ $# -eq 0 ]; then
-    echo "Uso: ./quickstart.sh <comando> [ruta]"
+    echo "Uso: ./quickstart.sh <comando> [ruta o descripción]"
     echo ""
     echo "Comandos disponibles:"
     echo "  analyze <ruta>    - Analizar un proyecto"
     echo "  admin-setup       - Configurar admin"
     echo "  docs <ruta>       - Generar documentación"
     echo "  validate <ruta>   - Validar seguridad"
+    echo "  generate <descripción> - Crear starter local"
     echo ""
     echo "Ejemplos:"
     echo "  ./quickstart.sh analyze ./mi-proyecto"
@@ -29,27 +30,27 @@ case "$1" in
     analyze)
         TARGET="${2:-.}"
         echo "📊 Analizando: $TARGET"
-        npx ai-builder analyze "$TARGET"
+        node ./bin/ai-builder.js analyze "$TARGET"
         ;;
     admin-setup)
-        echo "🔐 Configurando acceso de administrador..."
-        echo ""
-        read -sp "Ingresa contraseña (min 12 caracteres): " PASSWORD
-        echo ""
-        read -p "Nombre de dispositivo: " DEVICE
-        npx ai-builder admin --enable "$PASSWORD" "$DEVICE"
-        echo ""
+        echo "🔐 Configurando administrador local..."
+        node ./bin/ai-builder.js admin --enable
         echo "✅ Admin configurado correctamente"
         ;;
     docs)
         TARGET="${2:-.}"
         echo "📚 Generando documentación para: $TARGET"
-        npx ai-builder docs "$TARGET"
+        node ./bin/ai-builder.js docs "$TARGET"
         ;;
     validate)
         TARGET="${2:-.}"
         echo "✓ Validando: $TARGET"
-        npx ai-builder validate "$TARGET"
+        node ./bin/ai-builder.js validate "$TARGET"
+        ;;
+    generate)
+        shift
+        if [ $# -eq 0 ]; then echo "Incluye una descripción entre comillas."; exit 1; fi
+        node ./bin/ai-builder.js generate "$@"
         ;;
     *)
         echo "✗ Comando no reconocido: $1"

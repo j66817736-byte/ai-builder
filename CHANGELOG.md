@@ -1,45 +1,15 @@
-### v1.0.0 - Octubre 2026 ✅
+# Changelog
 
-#### Agregado
-- 🎉 Lanzamiento oficial de AI Builder
-- 🔍 Análisis inteligente de proyectos
-- 📊 Detección automática de frameworks
-- 🔐 Panel administrativo privado
-- 📝 Generación automática de documentación
-- ✅ Validación de seguridad
-- 🎁 Plantillas de código para features
-- 📱 Soporte multi-dispositivo
-- 🌍 Multi-plataforma (Windows, macOS, Linux)
-- 🛡️ Almacenamiento privado con permisos restrictivos
-- 📋 Log de auditoría
-- 🚀 Instaladores para todos los SO
+## Unreleased
 
-#### Características
-- ✅ Local-first (sin internet)
-- ✅ Privacidad máxima
-- ✅ Seguridad robusta (PBKDF2, salt aleatorio)
-- ✅ Dispositivos confiables
-- ✅ Detección de secretos
-- ✅ Documentación automática
-- ✅ Interfaz en español
-- ✅ CLI completa y funcional
-- ✅ Separación pública/administrativa
-- ✅ Modular y escalable
+- Restaurados los módulos ausentes de análisis, salud, generación de plantillas y formato de terminal.
+- Añadido un starter local de Next.js 16.4 con generación segura en carpeta nueva.
+- Añadida generación opcional explícita con Gemini; por defecto no hay llamadas a IA externa.
+- Endurecido el almacenamiento administrativo con PBKDF2 salado y permisos locales restrictivos.
+- Corregidos los comandos de la CLI, sus códigos de salida y el comportamiento de documentación para que no sobrescriba archivos.
+- Añadidas pruebas automatizadas y CI para compilación, pruebas y empaquetado.
+- Sustituidas las afirmaciones de “producción lista” y seguridad garantizada por límites verificables.
 
-#### Documentación
-- 📖 README.md
-- 📖 USAGE_GUIDE.md
-- 📖 FINAL_DOCUMENTATION.md
-- 📖 SECURITY.md
-- 📖 CONTRIBUTING.md
-- 📖 ROADMAP.md
-- 📖 PRODUCTION_CHECKLIST.md
-- 📖 TESTING.md
+## Nota de versión
 
----
-
-**Estado:** ✅ PRODUCCIÓN LISTA
-
-**Versión Actual:** 1.0.0
-
-**Próximo:** v1.1.0 (mejoras menores y más frameworks)
+El repositorio declara el paquete `1.0.0`; este changelog no implica que se haya publicado una versión en npm o que el producto haya superado auditoría comercial independiente.

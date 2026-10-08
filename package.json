@@ -1,27 +1,22 @@
 {
   "name": "ai-builder",
   "version": "1.0.0",
-  "description": "Local-first AI CLI para analizar y completar proyectos de forma segura, con panel administrativo privado",
+  "description": "CLI local-first para analizar proyectos, generar starters y documentación; generación Gemini opcional y explícita",
   "type": "module",
   "bin": {
     "ai-builder": "./bin/ai-builder.js"
-  },
-  "main": "./dist/cli/index.js",
-  "exports": {
-    ".": "./dist/cli/index.js"
   },
   "scripts": {
     "dev": "tsx src/cli/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/cli/index.js",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage",
-    "lint": "tsc --noEmit",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\"",
-    "prepublishOnly": "npm run build && npm run lint",
-    "prepare": "npm run build",
-    "postinstall": "npm run build"
+    "prepublishOnly": "npm run build && npm run typecheck && npm run lint && npm test",
+    "prepare": "npm run build"
   },
   "keywords": [
     "ai",
@@ -30,7 +25,7 @@
     "project-analysis",
     "security",
     "privacy",
-    "multiplataform",
+    "multiplatform",
     "typescript",
     "documentation",
     "admin-panel",
@@ -39,6 +34,13 @@
   ],
   "author": "j66817736-byte",
   "license": "MIT",
+  "files": [
+    "bin/",
+    "dist/",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/j66817736-byte/ai-builder",
@@ -49,7 +51,7 @@
   },
   "homepage": "https://github.com/j66817736-byte/ai-builder#readme",
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=22.13.0",
     "npm": ">=9.0.0"
   },
   "dependencies": {
@@ -60,15 +62,15 @@
   "devDependencies": {
     "@types/fs-extra": "^11.0.0",
     "@types/inquirer": "^9.0.0",
-    "@types/node": "^20.11.30",
+    "@types/node": "^22.13.0",
     "tsx": "^4.15.0",
     "typescript": "^5.4.5",
-    "vitest": "^1.0.0",
-    "@vitest/ui": "^1.0.0",
-    "@vitest/coverage-v8": "^1.0.0",
+    "vitest": "^5.0.3",
+    "vite": "^6.4.3",
     "prettier": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0"
+    "@eslint/js": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.71.1",
+    "@typescript-eslint/parser": "^8.71.1",
+    "eslint": "^10.12.0"
   }
 }

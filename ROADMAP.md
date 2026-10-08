@@ -1,90 +1,34 @@
-# Roadmap - AI Builder
+# Roadmap de AI Builder
 
-## ✅ v1.0.0 (ACTUAL - PRODUCCIÓN)
+## Estado implementado en esta rama
 
-### Completado
-- [x] CLI principal con comandos públicos
-- [x] Análisis de proyectos y frameworks
-- [x] Validación de seguridad
-- [x] Documentación automática
-- [x] Generación de plantillas
-- [x] Panel administrativo privado
-- [x] Almacenamiento seguro
-- [x] Dispositivos confiables
-- [x] Log de auditoría
-- [x] Multi-plataforma
-- [x] Instaladores (Windows, Linux, macOS)
-- [x] Documentación completa
+- [x] CLI de análisis, validación, documentación y plantillas.
+- [x] Starter Next.js local, con escritura que rechaza rutas de salida existentes.
+- [x] Generación opcional mediante Google Gemini bajo selección explícita.
+- [x] Verificación de rutas y límites de tamaño antes de escribir salida de Gemini.
+- [x] Administración local con verificador PBKDF2 y permisos restrictivos.
+- [x] Pruebas automatizadas, build y workflow de CI.
 
-## 🔄 v1.1.0 (PRÓXIMA)
+## Límites funcionales actuales
 
-### Planeado
-- [ ] Más frameworks (Svelte, Nuxt, Astro)
-- [ ] Integración con GitHub Actions
-- [ ] Validación de dependencias
-- [ ] Análisis de performance
-- [ ] Reportes en formato JSON
-- [ ] Integración con Slack/Discord
+- La detección del proyecto y el análisis de seguridad son heurísticos.
+- El modo local genera un starter fijo adaptable, no interpreta instrucciones mediante un modelo.
+- El generador Gemini está limitado a proyectos nuevos; no edita proyectos existentes.
+- No hay instalación automática de paquetes, ejecución de código, despliegue, panel web, sincronización remota, multiusuario ni identidad de hardware.
 
-## 🚀 v2.0.0 (FUTURO)
+## Antes de una publicación comercial
 
-### Visión
-- [ ] Dashboard web (local)
-- [ ] Interfaz gráfica
-- [ ] Sincronización en la nube (opcional)
-- [ ] Colaboración en equipo
-- [ ] Plugins/extensiones
-- [ ] API REST local
+- Ejecutar la CI en GitHub y revisar resultados de dependencias/avisos de seguridad.
+- Probar instalación del paquete desde un tarball limpio en Linux, macOS y Windows.
+- Revisar manualmente generación Gemini con claves propias y validar cuotas, términos, tratamiento/retención de datos y gestión de costes.
+- Hacer revisión de seguridad independiente, pruebas de accesibilidad y compatibilidad de los proyectos generados.
+- Decidir canal de soporte, política de privacidad, licencia/atribuciones, matriz de soporte y proceso de divulgación.
+- No afirmar que el software tiene “seguridad máxima” ni “privacidad garantizada”; describir de forma precisa los límites documentados.
 
-## 🎯 Prioridades
+## Mejoras futuras
 
-1. **Estabilidad** - Mantener v1.0.0 funcionando perfectamente
-2. **Seguridad** - Auditorías regulares de seguridad
-3. **Privacidad** - Nunca enviar datos sin permiso
-4. **Utilidad** - Solo agregar features que resuelvan problemas reales
-5. **Documentación** - Mantener docs actualizadas
-
-## 📋 Criterios para Nuevas Features
-
-Antes de agregar algo nuevo:
-- ¿Resuelve un problema real?
-- ¿Mantiene privacidad?
-- ¿Es simple de usar?
-- ¿No complica la base?
-- ¿Tiene valor para usuarios?
-
-## 🤝 Cómo Contribuir
-
-Para sugerir features:
-1. Abre un issue en GitHub
-2. Describe el problema que resuelve
-3. Explica cómo lo usarías
-4. Espera feedback
-
-Para reportar bugs:
-1. Describe exactamente qué pasó
-2. Incluye comando usado
-3. Incluye SO y versión de Node
-4. Pasos para reproducir
-
-## 📅 Timeline Esperado
-
-- **Octubre 2026** - v1.0.0 Production Release
-- **Q1 2027** - v1.1.0 (mejoras menores)
-- **Q4 2027** - v2.0.0 (grandes cambios)
-
-## 🎓 Visión a Largo Plazo
-
-AI Builder debe ser:
-- El asistente local preferido para desarrolladores
-- Privado por defecto, sin excepciones
-- Simple pero poderoso
-- Útil en la vida real
-- Escalable sin perder foco
-- Completamente auditable
-- Libre y abierto
-
----
-
-**Última actualización:** Octubre 2026
-**Versión:** 1.0.0
+- Más starters elegibles y esquemas de configuración de generación.
+- Pruebas de integración de paquetes publicados y de instalación en Windows.
+- Auditoría de dependencias reproducible y SBOM.
+- Mejorar el análisis de proyectos y proporcionar niveles de confianza.
+- Firmar releases y publicar avisos de seguridad versionados.

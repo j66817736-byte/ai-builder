@@ -19,7 +19,7 @@ const plannerAgent: Agent = {
 
 const architectureAgent: Agent = {
   name: "ArchitectureAgent",
-  async run(ctx: AgentContext): Promise<AgentResult> {
+  async run(_ctx: AgentContext): Promise<AgentResult> {
     return {
       ok: true,
       status: "success",
@@ -36,7 +36,7 @@ const architectureAgent: Agent = {
 
 const uiAgent: Agent = {
   name: "UIAgent",
-  async run(ctx: AgentContext): Promise<AgentResult> {
+  async run(_ctx: AgentContext): Promise<AgentResult> {
     return {
       ok: true,
       status: "success",
@@ -51,7 +51,7 @@ const uiAgent: Agent = {
 
 const qaAgent: Agent = {
   name: "QAAgent",
-  async run(ctx: AgentContext): Promise<AgentResult> {
+  async run(_ctx: AgentContext): Promise<AgentResult> {
     return {
       ok: true,
       status: "success",
@@ -66,7 +66,7 @@ const qaAgent: Agent = {
 
 const docsAgent: Agent = {
   name: "DocsAgent",
-  async run(ctx: AgentContext): Promise<AgentResult> {
+  async run(_ctx: AgentContext): Promise<AgentResult> {
     return {
       ok: true,
       status: "success",

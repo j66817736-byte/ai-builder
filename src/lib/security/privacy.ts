@@ -1,17 +1,11 @@
+const SECRET_PATTERNS: RegExp[] = [
+  /((?:api[_-]?key|access[_-]?token|auth[_-]?token|token|secret|password|passwd)\s*[=:]\s*)(['"]?)([^\s'";,]+)\2/gi,
+  /(Authorization:\s*Bearer\s+)[^\s]+/gi,
+  /\b(?:sk-[A-Za-z0-9_-]{12,}|ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16})\b/g,
+];
+
 export function sanitizeForOutput(value: string): string {
-  const secretPatterns = [
-    /(?:api[_-]?key|token|secret|password|passwd)=([^\s]+)/gi,
-    /Authorization:\s*Bearer\s+[^\s]+/gi,
-    /sk-[A-Za-z0-9]+/gi,
-  ];
-
-  let sanitized = value;
-
-  for (const pattern of secretPatterns) {
-    sanitized = sanitized.replace(pattern, "[REDACTED]");
-  }
-
-  return sanitized;
+  return SECRET_PATTERNS.reduce((text, pattern) => text.replace(pattern, (_match, prefix?: string) => prefix ? `${prefix}[REDACTED]` : "[REDACTED]"), value);
 }
 
 export function isLocalOnlyMode(): boolean {
@@ -19,5 +13,9 @@ export function isLocalOnlyMode(): boolean {
 }
 
 export function getPrivacyWarning(): string {
-  return "Modo seguro: el análisis se realiza localmente por defecto. No se suben datos a servidores sin tu permiso.";
+  return "Modo local: el análisis no envía archivos ni datos a servicios externos. Solo la generación remota solicitada explícitamente transmite el nombre y la descripción al proveedor elegido.";
+}
+
+export function getSecurityAdvice(): string {
+  return "Consejo de seguridad: nunca publiques claves o archivos .env; esta herramienta usa comprobaciones heurísticas y no sustituye una auditoría profesional.";
 }

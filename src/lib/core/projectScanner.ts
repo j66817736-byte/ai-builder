@@ -1,5 +1,5 @@
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 
 export type ProjectSummary = {
   framework: string | null;
@@ -15,65 +15,44 @@ export type ProjectSummary = {
 
 export async function scanProject(projectPath: string): Promise<ProjectSummary> {
   const summary: ProjectSummary = {
-    framework: null,
-    language: null,
-    hasPackageJson: false,
-    hasNextConfig: false,
-    hasTsConfig: false,
-    hasTailwind: false,
-    rootFiles: [],
-    directories: [],
-    warnings: [],
+    framework: null, language: null, hasPackageJson: false, hasNextConfig: false,
+    hasTsConfig: false, hasTailwind: false, rootFiles: [], directories: [], warnings: [],
   };
-
-  if (!(await fs.pathExists(projectPath))) {
+  const absolutePath = path.resolve(projectPath);
+  if (!(await fs.pathExists(absolutePath))) {
     summary.warnings.push("La ruta del proyecto no existe.");
     return summary;
   }
-
-  const entries = await fs.readdir(projectPath);
+  const stat = await fs.stat(absolutePath);
+  if (!stat.isDirectory()) {
+    summary.warnings.push("La ruta indicada no es una carpeta.");
+    return summary;
+  }
+  let entries: string[];
+  try { entries = await fs.readdir(absolutePath); }
+  catch { summary.warnings.push("No se pudo leer la carpeta; comprueba los permisos."); return summary; }
 
   summary.rootFiles = entries;
-  summary.directories = entries.filter((entry) => {
-    const full = path.join(projectPath, entry);
-    return fs.existsSync(full) && fs.statSync(full).isDirectory();
-  });
-
-  if (entries.includes("package.json")) {
-    summary.hasPackageJson = true;
+  for (const entry of entries) {
+    try { if ((await fs.stat(path.join(absolutePath, entry))).isDirectory()) summary.directories.push(entry); }
+    catch { /* Mantiene el escáner tolerante a archivos que cambian durante el análisis. */ }
   }
+  summary.hasPackageJson = entries.includes("package.json");
+  summary.hasNextConfig = ["next.config.js", "next.config.mjs", "next.config.ts"].some((name) => entries.includes(name));
+  summary.hasTsConfig = entries.includes("tsconfig.json");
+  summary.hasTailwind = ["tailwind.config.js", "tailwind.config.ts", "tailwind.config.mjs"].some((name) => entries.includes(name));
 
-  if (entries.includes("next.config.js") || entries.includes("next.config.mjs")) {
-    summary.hasNextConfig = true;
+  if (summary.hasPackageJson) {
+    try {
+      const pkg = await fs.readJson(path.join(absolutePath, "package.json"));
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+      if (deps.next) summary.framework = "Next.js";
+      else if (deps.react) summary.framework = "React";
+      else if (deps.vue) summary.framework = "Vue";
+      else if (deps.express) summary.framework = "Express";
+      summary.language = summary.hasTsConfig ? "TypeScript" : pkg.type === "module" ? "JavaScript (ESM)" : "JavaScript";
+    } catch { summary.warnings.push("package.json no contiene JSON válido."); }
   }
-
-  if (entries.includes("tsconfig.json")) {
-    summary.hasTsConfig = true;
-  }
-
-  if (entries.includes("tailwind.config.js") || entries.includes("tailwind.config.ts")) {
-    summary.hasTailwind = true;
-  }
-
-  const pkgPath = path.join(projectPath, "package.json");
-
-  if (await fs.pathExists(pkgPath)) {
-    const pkg = await fs.readJson(pkgPath);
-
-    if (pkg.dependencies?.next || pkg.devDependencies?.next) {
-      summary.framework = "Next.js";
-    } else if (pkg.dependencies?.react || pkg.devDependencies?.react) {
-      summary.framework = "React";
-    } else if (pkg.dependencies?.express || pkg.devDependencies?.express) {
-      summary.framework = "Express";
-    }
-
-    summary.language = pkg.type === "module" ? "TypeScript/JavaScript" : "JavaScript";
-  }
-
-  if (!summary.framework) {
-    summary.warnings.push("No se detectó un framework común. Puede ser un proyecto personalizado.");
-  }
-
+  if (!summary.framework) summary.warnings.push("No se detectó un framework conocido; el proyecto puede ser personalizado.");
   return summary;
 }
