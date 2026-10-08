@@ -20,7 +20,7 @@ npm test
 npm pack --dry-run
 ```
 
-La CI aplica los mismos controles en Linux, macOS y Windows, con Node.js 22 y 24. No es necesario configurar claves para las pruebas; los tests de Gemini usan respuestas sintéticas.
+La CI aplica los mismos controles en Linux y Windows, con Node.js 22 y 24. No es necesario configurar claves para las pruebas; los tests de Gemini usan respuestas sintéticas.
 
 ## Principios para cambios
 
