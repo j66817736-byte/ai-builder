@@ -6,50 +6,19 @@ import { getCurrentDeviceInfo, listTrustedDevices } from "./deviceSync.js";
 export async function getAdminPanelState() {
   const adminDir = path.join(os.homedir(), ".ai-builder");
   const adminFile = path.join(adminDir, "admin.json");
-
   if (!(await fs.pathExists(adminFile))) {
-    return {
-      enabled: false,
-      privateMode: true,
-      deviceName: null,
-      lastSync: null,
-      devices: [],
-    };
+    return { enabled: false, privateMode: true, deviceName: null as string | null, lastSync: null as string | null, devices: [] };
   }
-
   const config = await fs.readJson(adminFile);
-  const devices = await listTrustedDevices();
-
   return {
-    enabled: Boolean(config.enabled),
-    privateMode: Boolean(config.privateMode),
-    deviceName: config.deviceName ?? null,
-    lastSync: config.lastSync ?? null,
-    devices,
+    enabled: Boolean(config.enabled), privateMode: Boolean(config.privateMode),
+    deviceName: config.deviceName ?? null, lastSync: config.lastSync ?? null,
+    devices: await listTrustedDevices(),
   };
 }
 
-export async function exportPrivateAdminBundle() {
-  const deviceInfo = getCurrentDeviceInfo();
-  const bundle = {
-    exportedAt: new Date().toISOString(),
-    device: deviceInfo,
-    status: "private-admin-bundle",
-    note: "Archivos sensibles permanecen en dispositivos autorizados. No se publican en repositorios.",
-  };
-
-  return JSON.stringify(bundle, null, 2);
-}
-
-export async function syncPrivateAdminToDevice(deviceName: string) {
-  const device = getCurrentDeviceInfo();
-  const bundle = await exportPrivateAdminBundle();
-
-  return {
-    deviceName,
-    currentDevice: device,
-    bundle,
-    syncedAt: new Date().toISOString(),
-    mode: "secure-private-sync",
-  };
+/** Produce solo una vista de metadatos locales; no copia credenciales ni sincroniza dispositivos. */
+export async function exportPrivateAdminBundle(): Promise<string> {
+  const state = await getAdminPanelState();
+  return JSON.stringify({ exportedAt: new Date().toISOString(), device: getCurrentDeviceInfo(), enabled: state.enabled, privateMode: state.privateMode, trustedDeviceCount: state.devices.length }, null, 2);
 }

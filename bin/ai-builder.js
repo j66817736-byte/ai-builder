@@ -1,24 +1,16 @@
 #!/usr/bin/env node
 
-import chalk from "chalk";
-import { spawnSync } from "child_process";
-import path from "path";
-import { fileURLToPath } from "url";
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const distPath = path.join(__dirname, "../dist/cli/index.js");
-
-const args = process.argv.slice(2);
-
-// Mostrar bienvenida en primera ejecución o si no hay argumentos
-if (!args.length) {
-  const welcomePath = path.join(__dirname, "../dist/cli/welcome.js");
-  spawnSync("node", [welcomePath], { stdio: "inherit" });
-  console.log(chalk.cyan("\n" + "=".repeat(50)));
-  console.log(chalk.cyan("Usa: ai-builder --help para ver todos los comandos"));
-  console.log(chalk.cyan("=".repeat(50)) + "\n");
-  process.exit(0);
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
+const cliPath = path.join(currentDir, "../dist/cli/index.js");
+const args = process.argv.length > 2 ? process.argv.slice(2) : ["--help"];
+const result = spawnSync(process.execPath, [cliPath, ...args], { stdio: "inherit" });
+if (result.error) {
+  console.error(`No se pudo iniciar AI Builder: ${result.error.message}`);
+  process.exitCode = 1;
+} else {
+  process.exitCode = result.status ?? 1;
 }
-
-// Ejecutar CLI principal
-spawnSync("node", [distPath, ...args], { stdio: "inherit" });

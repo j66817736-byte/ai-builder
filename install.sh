@@ -23,12 +23,16 @@ echo "✓ Sistema detectado: $OS"
 
 # Verificar Node.js
 if ! command -v node &> /dev/null; then
-    echo "✗ Node.js no encontrado. Instala Node.js >=18.0.0 desde https://nodejs.org"
+    echo "✗ Node.js no encontrado. Instala Node.js >=22.13.0 desde https://nodejs.org"
     exit 1
 fi
 
 NODE_VERSION=$(node -v)
 echo "✓ Node.js $NODE_VERSION detectado"
+if ! node -e 'const [major, minor] = process.versions.node.split(".").map(Number); process.exit(major < 22 || (major === 22 && minor < 13) ? 1 : 0)'; then
+    echo "✗ AI Builder requiere Node.js >=22.13.0"
+    exit 1
+fi
 
 # Verificar npm
 if ! command -v npm &> /dev/null; then
@@ -42,7 +46,7 @@ echo "✓ npm $NPM_VERSION detectado"
 # Instalar dependencias
 echo ""
 echo "📦 Instalando dependencias..."
-npm install
+npm ci
 
 # Build
 echo ""
@@ -65,8 +69,8 @@ if command -v ai-builder &> /dev/null; then
     echo "✓ AI Builder instalado correctamente"
     ai-builder --help
 else
-    echo "⚠️  Usa: npx ai-builder para ejecutar desde aquí"
-    npx ai-builder --help
+    echo "ℹ️  No se creó un enlace global; puedes ejecutarlo desde este directorio:"
+    node ./bin/ai-builder.js --help
 fi
 
 echo ""
